@@ -1,5 +1,6 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using todo_dotnet.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+builder.Services.AddEntityFrameworkNpgsql().AddDbContext<TodosContext>(opt=>opt.UseNpgsql(builder.Configuration.GetConnectionString("SampleDbConnection")));
 
 var app = builder.Build();
 
