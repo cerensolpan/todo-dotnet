@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using todo_dotnet.Application.TodoOperation.GetTodos;
 using todo_dotnet.Application.TodoOperation.GetByIdTodo;
+using todo_dotnet.Application.TodoOperation.CreateTodo;
 using todo_dotnet.Data;
 using todo_dotnet.Models.Todo;
 using FluentValidation;
@@ -38,6 +39,17 @@ public class TodoController : ControllerBase
         validator.ValidateAndThrow(todoQuery);
         var result = todoQuery.Handle();
         return Ok(result);
+    }
+
+    [HttpPost]
+    public IActionResult AddTodo([FromBody] Todo newTodo)
+    {
+        CreateTodoCommand todoCommand = new CreateTodoCommand(_dbContext, _mapper);
+        CreateTodoCommandValidator validator = new CreateTodoCommandValidator();
+        todoCommand.Model = newTodo;
+        validator.ValidateAndThrow(todoCommand);
+        todoCommand.Handle();
+        return Ok();
     }
 
 }
