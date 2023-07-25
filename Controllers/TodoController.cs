@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using todo_dotnet.Application.TodoOperation.GetTodos;
 using todo_dotnet.Application.TodoOperation.GetByIdTodo;
 using todo_dotnet.Application.TodoOperation.CreateTodo;
+using todo_dotnet.Application.TodoOperation.DeleteTodo;
 using todo_dotnet.Data;
 using todo_dotnet.Models.Todo;
 using FluentValidation;
@@ -52,4 +53,15 @@ public class TodoController : ControllerBase
         return Ok();
     }
 
+    [HttpDelete("{id}")]
+
+    public IActionResult DeleteTodo(int id)
+    {
+        DeleteTodoCommand deleteTodoCommand = new DeleteTodoCommand(_dbContext);
+        DeleteTodoCommandValidator validator = new DeleteTodoCommandValidator();
+        deleteTodoCommand.TodoId = id;
+        validator.ValidateAndThrow(deleteTodoCommand);
+        deleteTodoCommand.Handle();
+        return Ok();
+    }
 }
